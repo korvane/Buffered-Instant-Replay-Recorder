@@ -1,15 +1,22 @@
 ﻿LIVE BUFFER VIDEO RECORDER
+-A Python application for live video capture with instant replay functionality
 
 
-in the integrated terminal:
+in the integrated terminal (otherwise program wont run):
 
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser     #allow scripts to run
-python -m venv myvenv                                   #create virtual environment
-.\myvenv\Scripts\activate                               #activate scripts
-pip install opencv-python                               #install OpenCV.
-pip install numpy                                       #install numpy
-pip install screeninfo                                  #install screeninfo
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser    
+python -m venv myvenv                                   
+.\myvenv\Scripts\activate                               
+pip install opencv-python                               
+pip install numpy                                       
+pip install screeninfo                                  
 
+#allow scripts to run
+#create virtual environment
+#activate scripts
+#install OpenCV.
+#install numpy
+#install screeninfo
 
 The file structure is organized by day. Each day contains a livestream recording and its corresponding clips.
 
