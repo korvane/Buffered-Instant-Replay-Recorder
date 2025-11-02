@@ -19,7 +19,7 @@ cv2.namedWindow('Replay', cv2.WINDOW_NORMAL)
 if two: #replay will be on the big screen.
     cv2.moveWindow('Replay', monitors[1].x, monitors[1].y)
     cv2.setWindowProperty('Replay', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-    cv2.resizeWindow('Live Video', monitors[0].width, monitors[0].height)
+    cv2.resizeWindow('Live Video', int(monitors[0].width/3*2), int(monitors[0].height/3*2))
     cv2.moveWindow('Live Video', 0, 0)
 else: #replay will be windowed fullscreen if theres only 1 monitor. hide live action.
     cv2.resizeWindow('Replay', monitors[0].width, monitors[0].height)
@@ -33,13 +33,13 @@ else: #replay will be windowed fullscreen if theres only 1 monitor. hide live ac
 os.makedirs('clips', exist_ok=True)
 pathname = "clips\\" + 'session ' + str(datetime.now().strftime('%b-%d-%y'))
 os.makedirs(pathname, exist_ok=True)
-name = 'stream ' + str(datetime.now().strftime('%H-%M')) + '.mp4'
+name = str(datetime.now().strftime('%H-%M')) +' stream' + '.mp4'
 fullpath = os.path.join(pathname, name)
 
 #handle someone creating a new stream directly after a previous one so stuff isnt deleted
 nm=0
 while os.path.exists(fullpath):
-    name = 'stream ' + str(nm) + ' ' + str(datetime.now().strftime('%H-%M')) + '.mp4'
+    name =  str(datetime.now().strftime('%H-%M')) +' stream ' + str(nm) + '.mp4'
     fullpath = os.path.join(pathname,name)
     nm+=1
 
@@ -121,14 +121,14 @@ while 1:
     if clip:
         strt = max(frameCur - clipLength, lbound)
         end = min(frameCur + clipLength, rbound)
-        name = 'clip-' + str(clipCount) + ' ' + str(datetime.now().strftime('%H-%M-%S')) + '.mp4'
+        name = str(datetime.now().strftime('%H-%M-%S')) + ' clip-' + str(clipCount) + '.mp4'
         fullpath = os.path.join(pathname, name)
         clipFile = cv2.VideoWriter(fullpath, fourcc, fps, (int(live.get(3)),int(live.get(4))))
         for i in range(strt, end):
             clipFile.write(videoQueue.get(i%videoQueue.maxSize))
 
         cv2.putText(frame, 'clip', (30,30), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2, cv2.LINE_AA)
-        print('clip ' + str(clip) + ' was made.')
+        print('clip ' + str(clipCount) + ' was made.')
 
         clipFile.release()
         clipCount += 1
