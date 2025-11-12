@@ -39,3 +39,5 @@ CONTROLS:
 -clip takes roughly 5 seconds before and 5 seconds after.
 
 "cycle webcams" is '\'
+
+"slo-mo" is 'l' (L)

@@ -6,6 +6,7 @@ from datetime import datetime
 import os
 from screeninfo import get_monitors
 
+
 """organize monitor displaying"""
 #get highest index camera
 cameraIndex = 5
@@ -69,6 +70,7 @@ out = cv2.VideoWriter(fullpath, fourcc, fps, (int(live.get(3)),int(live.get(4)))
 jumpSize = int(fps * 5)
 stepSize = int(2 * fps / 30)
 clipLength = int(fps * 5) #clip length 5 seconds each direction
+slomoSpeed = int(fps/10)
 
 """declare methods lmao (laughing my ah off)"""
 play = True
@@ -79,6 +81,7 @@ stepFore = False
 stepBack = False
 clip = False
 toggleCamera = False
+slomo = False
 
 frameCur = -1
 lbound = 0
@@ -88,7 +91,7 @@ clipCount = 0
 videoQueue = VideoLoop.CircularQueue(int(fps * 600)) # 10 minutes
 cameraCooldown = 0
 
-"""infinite loop ran 30 times per second due live.read(). """
+"""infinite loop ran fps times per second due live.read(). """
 while 1:
     ret, frame = live.read()
     if not ret: break
@@ -106,7 +109,11 @@ while 1:
     
     """ \"methods\" """
     if play:
-        frameCur+=1
+        if slomo:
+            pre = frameCur
+            frameCur += 1 if int(rbound%slomoSpeed) == 0 else 0
+        else:
+            frameCur+=1
     else:
         frameCur = lbound if lbound >= frameCur else frameCur #max of lbound and framecur
 
@@ -159,6 +166,7 @@ while 1:
             cameraCooldown = int(fps)
         toggleCamera = False
         
+
     
     """show screen"""
     playback = videoQueue.get(frameCur % videoQueue.maxSize)
@@ -187,6 +195,11 @@ while 1:
         toggleCamera = True
     if k == ord('q'): #escape
             break
+    if k == ord('l'):
+        slomo = not slomo
+    if k != -1:
+        print(k)
+    
     
 
 live.release()
