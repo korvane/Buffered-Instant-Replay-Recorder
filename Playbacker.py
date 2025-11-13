@@ -9,7 +9,7 @@ from screeninfo import get_monitors
 
 """organize monitor displaying"""
 #get highest index camera
-cameraIndex = 5
+cameraIndex = 10
 live = cv2.VideoCapture(cameraIndex)
 while not live.isOpened():
     cameraIndex-=1
@@ -18,9 +18,11 @@ while not live.isOpened():
         print('No camera found. You need a camera.')
         exit()
     live = cv2.VideoCapture(cameraIndex)
+
 maxCamIndex = cameraIndex+1
 os.system('cls')
 print('You have ' + str(maxCamIndex) + ' camera(s).')
+live = cv2.VideoCapture(maxCamIndex-1)
 
 monitors = get_monitors()
 two = len(monitors) > 1
@@ -56,7 +58,8 @@ while os.path.exists(fullpath):
     fullpath = os.path.join(pathname,name)
     nm+=1
 
-
+audio_filename = name.replace('.mp4', '.wav')
+audio_path = os.path.join(pathname, audio_filename)
 
 
 #get fps of camera
@@ -96,6 +99,9 @@ while 1:
     ret, frame = live.read()
     if not ret: break
     #frame = cv2.flip(frame, 1)
+    tim = datetime.now().strftime("%H:%M:%S.%f")[:-4]
+    cv2.putText(frame, tim, (0,40), cv2.FONT_HERSHEY_COMPLEX, 1, (0,0,0), 2, cv2.LINE_AA) #black outline
+    cv2.putText(frame, tim, (0,40), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 1, cv2.LINE_AA)
     out.write(frame)
     rbound += 1
     if cameraCooldown > 0:
@@ -144,9 +150,9 @@ while 1:
     if clip:
         strt = max(frameCur - clipLength, lbound)
         end = min(frameCur + clipLength, rbound)
-        name = str(datetime.now().strftime('%H-%M-%S')) + ' clip-' + str(clipCount) + '.mp4'
-        fullpath = os.path.join(pathname, name)
-        clipFile = cv2.VideoWriter(fullpath, fourcc, fps, (int(live.get(3)),int(live.get(4))))
+        nameClip = str(datetime.now().strftime('%H-%M-%S')) + ' clip-' + str(clipCount) + '.mp4'
+        fullpathClip = os.path.join(pathname, nameClip)
+        clipFile = cv2.VideoWriter(fullpathClip, fourcc, fps, (int(live.get(3)),int(live.get(4))))
         for i in range(strt, end):
             clipFile.write(videoQueue.get(i%videoQueue.maxSize))
 
@@ -163,7 +169,6 @@ while 1:
             cameraIndex = (cameraIndex + 1) % maxCamIndex
             live.release()
             live = cv2.VideoCapture(cameraIndex)
-            cameraCooldown = int(fps)
         toggleCamera = False
         
 
@@ -197,11 +202,7 @@ while 1:
             break
     if k == ord('l'):
         slomo = not slomo
-    if k != -1:
-        print(k)
     
-    
-
 live.release()
 out.release()
 cv2.destroyAllWindows()
