@@ -5,6 +5,7 @@ import VideoLoop
 from datetime import datetime
 import os
 from screeninfo import get_monitors
+import time
 
 
 """organize monitor displaying"""
@@ -66,10 +67,8 @@ audio_path = os.path.join(pathname, audio_filename)
 fps = live.get(cv2.CAP_PROP_FPS)
 if(fps <= 0):
     fps = 30
-
 fourcc = cv2.VideoWriter.fourcc(*'mp4v')
 out = cv2.VideoWriter(fullpath, fourcc, fps, (int(live.get(3)),int(live.get(4)))) #write to file
-
 jumpSize = int(fps * 5)
 stepSize = int(1 * fps / 30)
 clipLength = int(fps * 5) #clip length 5 seconds each direction
@@ -95,6 +94,7 @@ videoQueue = VideoLoop.CircularQueue(int(fps * 300)) # 30 minutes
 cameraCooldown = 0
 
 """infinite loop ran fps times per second due live.read(). """
+prev_time = time.time()
 while 1:
     ret, frame = live.read()
     if not ret: break
@@ -120,8 +120,9 @@ while 1:
             frameCur += 1 if int(rbound%slomoSpeed) == 0 else 0
         else:
             frameCur+=1
+            
     else:
-        frameCur = lbound if lbound >= frameCur else frameCur #max of lbound and framecur
+        frameCur = lbound if lbound >= frameCur else frameCur #max of lbound and framecur 
 
     if toEnd:
         frameCur = rbound
@@ -182,8 +183,6 @@ while 1:
 
     """keybinds"""
     k = cv2.waitKeyEx(1)
-    if(k != -1):
-        print(k)
     if k == 13: #enter key, toLive
         toEnd = True
     if k == ord(' '): #start/stop
@@ -204,6 +203,11 @@ while 1:
             break
     if k == ord('l'):
         slomo = not slomo
+
+    elapsed = time.time() - prev_time
+    wait_time = max(0, 1/fps - elapsed)
+    time.sleep(wait_time)
+    prev_time = time.time()
     
 live.release()
 out.release()
