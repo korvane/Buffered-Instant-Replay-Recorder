@@ -114,8 +114,6 @@ while 1:
     videoQueue.enqueue(frame)
     
     """ \"methods\" """
-    if slomo: 
-        play = True
     if play:
         if slomo:
             pre = frameCur
@@ -159,7 +157,7 @@ while 1:
             clipFile.write(videoQueue.get(i%videoQueue.maxSize))
 
         cv2.putText(frame, 'clip', (30,30), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2, cv2.LINE_AA)
-        print('clip ' + str(clipCount) + ' was made.')
+        print('43clip ' + str(clipCount) + ' was made.')
 
         clipFile.release()
         clipCount += 1
@@ -183,14 +181,16 @@ while 1:
 
 
     """keybinds"""
-    k = cv2.waitKey(1)
+    k = cv2.waitKeyEx(1)
+    if(k != -1):
+        print(k)
     if k == 13: #enter key, toLive
         toEnd = True
     if k == ord(' '): #start/stop
         play = not play
-    if k == ord('o'): #left arrow doesnt work. jump backwards 5 seconds
+    if k == 2424832: #left arrow doesnt work. jump backwards 5 seconds
         jumpBack5 = True
-    if k == ord('p'): #right arrow doesnt work. jump forwards 5 seconds
+    if k == 2555904: #right arrow doesnt work. jump forwards 5 seconds
         jumpForward5 = True 
     if k == ord(','): #step backwards 2 frames
         stepBack = True
