@@ -14,6 +14,7 @@ python -m venv myvenv
 pip install opencv-python                               
 pip install numpy                                       
 pip install screeninfo                                  
+pip install time
 
 command functions:
 1. allow scripts to run
