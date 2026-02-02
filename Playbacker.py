@@ -181,6 +181,10 @@ def main():
 
         if toEnd:
             frameCur = rbound
+            if slomo:
+                slomo = False
+            if not play:
+                play = True
             toEnd = False
 
         if jumpBack5:
