@@ -7,7 +7,6 @@ import os
 from screeninfo import get_monitors
 import time
 
-
 """organize monitor displaying"""
 #get highest index camera
 cameraIndex = 10
@@ -84,6 +83,7 @@ stepBack = False
 clip = False
 toggleCamera = False
 slomo = False
+changedCamera = False #in case camera is cycled across
 
 frameCur = -1
 lbound = 0
@@ -148,7 +148,7 @@ while 1:
         frameCur = rbound if rbound < frameCur + stepSize else frameCur + stepSize 
         stepFore = False
 
-    if clip:
+    if clip and not changedCamera:
         strt = max(frameCur - clipLength, lbound)
         end = min(frameCur + clipLength, rbound)
         nameClip = str(datetime.now().strftime('%H-%M-%S')) + ' clip-' + str(clipCount) + '.mp4'
@@ -170,6 +170,7 @@ while 1:
             cameraIndex = (cameraIndex + 1) % maxCamIndex
             live.release()
             live = cv2.VideoCapture(cameraIndex)
+            changedCamera = True #disable clipping
         toggleCamera = False
         
 
