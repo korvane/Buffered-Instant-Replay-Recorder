@@ -9,25 +9,27 @@ Instructions on how to piece through the replays are below.
 in the integrated terminal (otherwise program wont run):
 
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser    
-python -m venv myvenv                                   
+winget install Python.Python.3.10 (do this if you dont have python 3.10, or find another way to get python 3.10)
+py -3.10 -m venv myvenv
+(select yes if using VS Code)
 .\myvenv\Scripts\activate                               
-pip install opencv-python                               
-pip install numpy                                       
-pip install screeninfo                                  
+pip install numpy opencv-python screeninfo 
+repoen vscode
+
 
 command functions:
 1. allow scripts to run
-2. create virtual environment
-3. activate scripts
-4. install OpenCV.
-5. install numpy
-6. install screeninfo
+2. install python 3.10
+3. create virtual environment
+4. activate scripts
+5. install OpenCV, numpy, screeninfo
+6. reboot vscode
 
 The file structure is organized by day. Each day contains a livestream recording and its corresponding clips.
 
 
 CONTROLS:
-"move forward/back 5 seconds" is 'o' and 'p'
+"move forward/back 5 seconds" is 'right arrow' and 'left arrow'.
 
 "step forward/back 1 frame" is ',' and '.'
 
@@ -38,6 +40,6 @@ CONTROLS:
 "clip" is c. 
 -clip takes roughly 5 seconds before and 5 seconds after.
 
-"cycle webcams" is '\'
+"cycle webcams" is '\' (clipping is not enabled after this)
 
 "slo-mo" is 'l' (L)
