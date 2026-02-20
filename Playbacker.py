@@ -18,6 +18,7 @@ while not live.isOpened():
     if cameraIndex < 0:
         print('No camera found. You need a camera.')
         exit()
+    cameraIndex=0
     live = cv2.VideoCapture(cameraIndex)
 
 maxCamIndex = cameraIndex+1
@@ -47,7 +48,7 @@ else: #replay will be windowed fullscreen if theres only 1 monitor. hide live ac
 """create files"""
 
 os.makedirs('clips', exist_ok=True)
-pathname = "clips\\" + 'session ' + str(datetime.now().strftime('%b-%d-%y'))
+pathname = "clips\\" + 'session ' + str(datetime.now().strftime('%y-%b-%d'))
 os.makedirs(pathname, exist_ok=True)
 name = str(datetime.now().strftime('%H-%M')) +' stream' + '.mp4'
 fullpath = os.path.join(pathname, name)
@@ -100,8 +101,22 @@ while 1:
     if not ret: break
     #frame = cv2.flip(frame, 1)
     tim = datetime.now().strftime("%H:%M:%S.%f")[:-4]
+    dat = datetime.now().strftime("%m-%d-%Y")
+
+
+    monx, mony = frame.shape[:2]
+    monx = monx + 60 if monx >= 720 else monx - 300
+    monx = 0
+    mony = mony - 600 if mony > 640 else mony - 175
+    bottom_right = (monx, mony)
+
+
     cv2.putText(frame, tim, (0,40), cv2.FONT_HERSHEY_COMPLEX, 1, (0,0,0), 2, cv2.LINE_AA) #black outline
     cv2.putText(frame, tim, (0,40), cv2.FONT_HERSHEY_COMPLEX, 1, (255,255,255), 1, cv2.LINE_AA)
+
+    cv2.putText(frame, dat, bottom_right, cv2.FONT_HERSHEY_COMPLEX, 2, (0,0,0), 4, cv2.LINE_AA) #black outline
+    cv2.putText(frame, dat, bottom_right, cv2.FONT_HERSHEY_COMPLEX, 2, (255,255,255), 2, cv2.LINE_AA)
+
     out.write(frame)
     rbound += 1
     if cameraCooldown > 0:
@@ -127,6 +142,10 @@ while 1:
     if toEnd:
         frameCur = rbound
         toEnd = False
+        if slomo:
+            slomo = False
+        if not play:
+            play = True
 
     if jumpBack5:
         #go back jumpSize frames. in the actual video, stop at the back and prevent wrapping
@@ -158,7 +177,7 @@ while 1:
             clipFile.write(videoQueue.get(i%videoQueue.maxSize))
 
         cv2.putText(frame, 'clip', (30,30), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2, cv2.LINE_AA)
-        print('43clip ' + str(clipCount) + ' was made.')
+        print(str(clipCount) + ' was made.')
 
         clipFile.release()
         clipCount += 1
