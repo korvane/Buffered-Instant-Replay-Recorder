@@ -17,7 +17,6 @@ while not live.isOpened():
     if cameraIndex < 0:
         print('No camera found. You need a camera.')
         exit()
-    cameraIndex=0
     live = cv2.VideoCapture(cameraIndex)
 
 maxCamIndex = cameraIndex+1
