@@ -221,6 +221,8 @@ while 1:
     if k == ord('q'): #escape
             break
     if k == ord('l'):
+        if not slomo and not play:
+            play = True
         slomo = not slomo
 
     elapsed = time.time() - prev_time
