@@ -100,7 +100,13 @@ while 1:
     if not ret: break
     #frame = cv2.flip(frame, 1)
     tim = datetime.now().strftime("%H:%M:%S.%f")[:-4]
-    dat = datetime.now().strftime("%m-%d-%Y")
+    if datetime.now().hour==12:
+            tim += " PM"
+    elif datetime.now().hour < 12:
+        tim += " AM" 
+    else:
+        tim = str(datetime.now().hour - 12) + ":" + datetime.now().strftime("%M:%S.%f")[:-4] + " PM"
+    dat = datetime.now().strftime("%b-%d-%Y")
 
 
     monx, mony = frame.shape[:2]
